@@ -12,7 +12,7 @@ end
 
 # remove instances of nil (but NOT false) from an array
 def remove_nils_from_array(array)
-  array.reject(&:nil?)
+  array.compact
 end
 
 # remove instances of nil AND false from an array
@@ -39,6 +39,7 @@ end
 def all_elements_except_first_3(array)
   array.slice!(0..2)
   return array
+  #array.drop(3)
 end
 
 # add an element to the beginning of an array
@@ -111,7 +112,7 @@ end
 # get the average from an array, rounded to the nearest integer
 # so [10, 15, 25] should return 33
 def average_of_array(array)
-  array.inject(&:+) / array.size + 1
+  array.inject(&:+) / array.size+1 
 end
 
 # get all the elements in an array, up until the first element
@@ -134,7 +135,7 @@ end
 # . e.g. the array ['cat', 'dog', 'fish'] becomes
 # ['a', 'c', 'd', 'f', 'g', 'h', 'i', 'o', 's', 't']
 def get_all_letters_in_array_of_words(array)
-  array.map{|word| word.chars}.flatten!.sort!
+  array.map{|word| word.chars}.flatten.sort
 end
 
 # swap the keys and values in a hash. e.g.
@@ -148,7 +149,7 @@ end
 # add all the keys and all the values together, e.g.
 # {1 => 1, 2 => 2} becomes 6
 def add_together_keys_and_values(hash)
-  hash.to_a.flatten.inject(&:+)
+  hash.flatten.inject(&:+)
 end
 
 # take out all the capital letters from a string
@@ -160,13 +161,13 @@ end
 # round up a float up and convert it to an Integer,
 # so 3.214 becomes 4
 def round_up_number(float)
-  float.ceil.to_i
+  float.ceil
 end
 
 # round down a float up and convert it to an Integer,
 # so 9.52 becomes 9
 def round_down_number(float)
-  float.floor.to_i
+  float.floor
 end
 
 # take a date and format it like dd/mm/yyyy, so Halloween 2013
@@ -196,7 +197,7 @@ end
 # where 'special character' means anything apart from the letters
 # a-z (uppercase and lower) or numbers
 def check_a_string_for_special_characters(string)
-  string.match(/[^[:alnum:]]/) == nil ? false : true
+  !string.match(/[^[:alnum:]]/).nil? 
 end
 
 # get the upper limit of a range. e.g. for the range 1..20, you
@@ -256,20 +257,14 @@ end
 # and 1 that is 4 letters long. Return it as a hash in the format
 # word_length => count, e.g. {2 => 1, 3 => 5, 4 => 1}
 def count_words_of_each_length_in_a_file(file_path)
-  hash = Hash.new
+  hash = Hash.new(0)
   file = File.open('/Users/DDemkiw/Challenges/Challenge9/ruby-refresher/data/' + file_path, "r")
-  file.each_line { |line|
-    words = line.split
-    words.each { |w|
+  file.read.split(' ').each do |w|
     length = w.downcase.gsub(/[^a-z0-9\s]/i, '').length
-      if hash.has_key?(length)
-        hash[length] = hash[length] + 1
-      else
-        hash[length] = 1
-      end
-    }
-  }
- return hash 
+    hash[length] += 1
+  end
+
+  return hash 
 end
 
 # implement fizzbuzz without modulo, i.e. the % method
